@@ -33,6 +33,8 @@ def draw_landmarks_on_image(rgb_image, hand_landmarks_list):
             y_px = int(landmark.y * annotated_image.shape[0])
             cv2.circle(annotated_image, (x_px, y_px), 5, (0, 255, 0), -1)
     return annotated_image
+    
+#Function for cursor movement
 def cursor_move(rgb_image, hand_landmarks_list):
     annotated_image = np.copy(rgb_image)
     if hand_landmarks_list:
@@ -92,7 +94,8 @@ while cap.isOpened():
             cursor_move(rgb_frame, result.hand_landmarks)
             thumb_angle=get_angle(result.hand_landmarks[0][1],result.hand_landmarks[0][2],result.hand_landmarks[0][4],rgb_frame.shape[1],rgb_frame.shape[0])
             middle_angle=get_angle(result.hand_landmarks[0][9],result.hand_landmarks[0][10],result.hand_landmarks[0][12],rgb_frame.shape[1],rgb_frame.shape[0])
-
+            
+            #If thumb is bent => left click
             if thumb_angle < 140 and not click_state:
                 pyautogui.click()
                 click_state = True
@@ -101,6 +104,7 @@ while cap.isOpened():
             elif thumb_angle >= 140:
                     click_state = False
 
+            #If middle finger is bent => right click
             if middle_angle < 140 and not click_state_middle:
                 pyautogui.rightClick()
                 click_state_middle = True
